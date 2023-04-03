@@ -1,0 +1,285 @@
+<div ng-controller="trangchuCtrl">
+    <div class="row">
+        <div class="col-11">
+            <button class="btn btn-success" data-toggle="modal" data-target="#myModal"
+                ng-if="isAdmin || isUser" ng-click="load_all()">Add</button>
+        </div>
+        <div class="dropdown show">
+            <a class="btn btn-warning dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                {{AccountName}}
+            </a>
+
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                <a class="dropdown-item" href="#login">Login</a>
+                <a class="dropdown-item" ng-click="logout()">Logout</a>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="modal fade" id="myModal" role="dialog" tabindex="-1">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Thêm</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container" style="background-color: white;">
+                        <form name="myForm" method="post" ng-submit="onSubmit(event)">
+
+                            <label for="">Product Name</label>
+                            <input type="text" name="txtName" class="form-control" ng-model="product1.productName"
+                                required>
+                            <small style="color: red;font-style: italic;"
+                                ng-show="myForm.txtName.$touched && myForm.txtName.$invalid">Không được để trống</small>
+
+                            <label for="">Price</label>
+                            <input type="number" min="1" name="txtPrice" class="form-control" ng-model="product1.price"
+                                required>
+                            <small style="color: red;font-style: italic;"
+                                ng-show="myForm.txtPrice.$touched && myForm.txtPrice.$invalid">Không được để
+                                trống</small>
+
+                            <label for="">Quantity</label>
+                            <input type="number" name="txtQuantity" class="form-control" min="1"
+                                ng-model="product1.quantity" required>
+
+                            <small style="color: red;font-style: italic;"
+                                ng-show="myForm.txtQuantity.$touched && myForm.txtQuantity.$invalid">Không được để
+                                trống</small>
+
+                            <label for="">Description</label>
+                            <input type="text" name="txtDescription" class="form-control" ng-model="product1.description"
+                                required>
+                            <small style="color: red;font-style: italic;"
+                                ng-show="myForm.txtDescription.$touched && myForm.txtDescription.$invalid">Không được để
+                                trống</small>
+
+                            <label for="">Shape</label>
+                            <input type="text" name="txtShape" class="form-control" ng-model="product1.shape" required>
+                            <small style="color: red;font-style: italic;"
+                                ng-show="myForm.txtShape.$touched && myForm.txtShape.$invalid">Không được để
+                                trống</small>
+
+                            <p for="">Taste:</p>
+                            <input type="radio" id="sweet" name="txtTaste" value="true" ng-model="product1.originPrice"
+                                required>
+                            <label for="sweet">Sweet</label><br>
+                            <input type="radio" id="salty" name="txtTaste" value="false" ng-model="product1.originPrice"
+                                required>
+                            <label for="salty">Salty</label><br>
+
+                            <!-- <small style="color: red;font-style: italic;"
+                                ng-show="myForm.txtTaste.$touched && myForm.txtTaste.$invalid">Không được để
+                                trống</small> -->
+
+                            <button class="btn btn-success">Thêm</button>
+                        </form>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-default" data-dismiss="modal">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th>NO</th>
+                <th>Product Name</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Description</th>
+                <th>Shape</th>
+                <th>Taste</th>
+                <th>Function</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="xm in listProduct" ng-if="xm.deleted == false">
+                <td>{{xm.id}}</td>
+                <td>{{xm.productName}}</td>
+                <td>{{xm.price | currency :"" : 0}}Vn₫</td>
+                <td>{{xm.quantity}}</td>
+                <td>{{xm.description}}</td>
+                <td>{{xm.shape}}</td>
+                <td>{{xm.taste == 0 ? "Salty" : "Sweet"}}</td>
+                <!-- <div ng-show="listAccount.role == 1"> -->
+                <!-- Hiển thị nội dung chỉ cho admin -->
+                <td><a class="fa-solid fa-eye fa-fw" data-toggle="modal" data-target="#myDetail"
+                        ng-click="selectShow(xm.id)" ng-if="isAdmin || isUser"></a>
+                    <a data-toggle="modal" data-target="#myUpdate" class="fa-solid fa-pencil fa-fw"
+                        ng-click="selectShow(xm.id)" ng-if="isAdmin || isUser"></a>
+                    <a data-toggle="modal" class="fa-solid fa-trash fa-fw"
+                        ng-click="onXoa(xm.id)" ng-if="isAdmin"></a>
+                </td>
+                <!-- </div> -->
+
+            </tr>
+        </tbody>
+
+    </table>
+
+    <div class="modal fade" id="myDetail" role="dialog" tabindex="-1">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Chi tiết</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container" style="background-color: white;">
+                        <form name="myForm">
+                            <label for="">Product Name</label>
+                            <input type="text" name="txtName" class="form-control" ng-model="product.productName"
+                                readonly>
+
+                            <label for="">Price</label>
+                            <input type="number" min="1" name="txtPrice" class="form-control" ng-model="product.price"
+                                readonly>
+
+                            <label for="">Quantity</label>
+                            <input type="number" class="form-control" name="txtQuantity" min="1"
+                                ng-model="product.quantity" readonly>
+
+                            <label for="">Create User</label>
+                            <input type="text" name="txtCreateUser" class="form-control" ng-model="product.createdUser"
+                                readonly>
+
+                            <label for="">Create Date</label>
+                            <input type="datetime" name="txtCreateDate" class="form-control"
+                                ng-model="product.createDate" readonly>
+
+                            <label for="">Last Modified User</label>
+                            <input type="text" name="txtlastModifiedUser" class="form-control"
+                                ng-model="product.lastModifiedUser" readonly>
+
+                            <label for="">Last Modified Date</label>
+                            <input type="text" name="txtlastModifiedDate" class="form-control"
+                                ng-model="product.lastModifiedDate" readonly>
+
+                            <label for="">Description</label>
+                            <input type="text" name="txtDescription" class="form-control" ng-model="product.description"
+                                readonly>
+                            <small style="color: red;font-style: italic;"
+                                ng-show="myForm.txtDescription.$touched && myForm.txtDescription.$invalid">Không được để
+                                trống</small>
+
+                            <label for="">Deleted</label>
+                            <input type="text" name="txtDeleted" class="form-control" ng-model="product.deleted"
+                                readonly>
+                            <small style="color: red;font-style: italic;"
+                                ng-show="myForm.txtDeleted.$touched && myForm.txtDeleted.$invalid">Không được để
+                                trống</small>
+
+                            <label for="">Shape</label>
+                            <input type="text" name="txtShape" class="form-control" ng-model="product.shape" readonly>
+
+                            <p for="">Taste:</p>
+                            <input type="radio" id="salty" name="txtTaste" value="false" ng-model="product.taste"
+                                autocomplete="off" ng-checked="product.taste === false" disabled>
+                            <label for="salty">Salty</label><br>
+                            <input type="radio" id="sweet" name="txtTaste" value="true" ng-model="product.taste"
+                                autocomplete="off" ng-checked="product.taste === true" disabled>
+                            <label for="sweet">Sweet</label><br>
+
+                        </form>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-default" data-dismiss="modal">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="myUpdate" role="dialog" tabindex="-1">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Cập nhật</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container" style="background-color: white;">
+                        <form name="myForm" method="post" ng-submit="onSua()">
+                            <label for="">Product Name</label>
+                            <input type="text" name="txtName" class="form-control" ng-model="product.productName"
+                                required>
+                            <small style="color: red;font-style: italic;"
+                                ng-show="myForm.txtName.$touched && myForm.txtName.$invalid">Không được để trống</small>
+
+                            <label for="">Price</label>
+                            <input type="number" min="1" name="txtPrice" class="form-control" ng-model="product.price"
+                                required>
+                            <small style="color: red;font-style: italic;"
+                                ng-show="myForm.txtPrice.$touched && myForm.txtPrice.$invalid">Không được để
+                                trống</small>
+
+                            <label for="">Quantity</label>
+                            <input type="number" name="txtQuantity" class="form-control" min="1"
+                                ng-model="product.quantity" required>
+                            <small style="color: red;font-style: italic;"
+                                ng-show="myForm.txtQuantity.$touched && myForm.txtQuantity.$invalid">Không
+                                được để
+                                trống</small>
+
+                            <small style="color: red;font-style: italic;"
+                                ng-show="myForm.txtQuantity.$touched && myForm.txtQuantity.$invalid">Không được để
+                                trống</small>
+
+                            <!-- <label for="">Last Modified User</label>
+                            <input type="" name="txtlastModifiedUser" class="form-control"
+                                ng-model="product.lastModifiedUser" required> -->
+                            <!-- <small style="color: red;font-style: italic;"
+                                ng-show="myForm.txtlastModifiedDate.$touched && myForm.txtlastModifiedDate.$invalid">Không
+                                được để
+                                trống</small> -->
+
+                            <label for="">Description</label>
+                            <input type="text" name="txtDescription" class="form-control" ng-model="product.description"
+                                required>
+                            <small style="color: red;font-style: italic;"
+                                ng-show="myForm.txtDescription.$touched && myForm.txtDescription.$invalid">Không được để
+                                trống</small>
+
+                            <label for="">Shape</label>
+                            <input type="text" name="txtShape" class="form-control" ng-model="product.shape" required>
+                            <small style="color: red;font-style: italic;"
+                                ng-show="myForm.txtShape.$touched && myForm.txtShape.$invalid">Không được để
+                                trống</small>
+
+                            <p for="">Taste:</p>
+                            <input type="radio" id="salty" name="txtTaste" value="false" ng-model="product.taste"
+                                autocomplete="off" ng-checked="product.taste === false">
+                            <label for="salty">Salty</label><br>
+                            <input type="radio" id="sweet" name="txtTaste" value="true" ng-model="product.taste"
+                                autocomplete="off" ng-checked="product.taste === true">
+                            <label for="sweet">Sweet</label><br>
+
+                            <small style="color: red;font-style: italic;"
+                                ng-show="myForm.txtTaste.$touched && myForm.txtTaste.$invalid">Không được để
+                                trống</small>
+                            <button class="btn btn-success">Sửa</button>
+                        </form>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-default" data-dismiss="modal">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,30 @@
+<div ng-controller="trangchuCtrl">
+    <h1>Danh Sách Trà sữa </h1>
+    <hr>
+
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Tên</th>
+                <th>Danh mục</th>
+                <th>Hãng</th>
+                <th>Giá</th>
+                <th>Image</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="xm in listTrasua" ng-if="idXoa == xm.id">
+               
+                    <td>{{xm.id}}</td>
+                    <td>{{xm.ten}}</td>
+                    <td>{{xm.danhMuc}}</td>
+                    <td>{{xm.hang }} </td>
+                    <td>{{xm.gia | currency :"" : 0}} Vn₫ </td>
+                    <td><img src="{{xm.image}}" alt=""></td>
+                    <td><a href="#sua/{{xm.id}}">Sửa</a></td>
+
+            </tr>
+        </tbody>
+    </table>
+</div>
